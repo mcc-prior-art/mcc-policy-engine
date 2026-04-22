@@ -4,6 +4,8 @@
 ![Prior Art](https://img.shields.io/badge/prior%20art-2026--04--22-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+> **MCC defines a control boundary between intent and execution in AI systems.**
+
 **Fail-closed control layer** for policy-gated execution with **cryptographic hash-chain audit**.
 
 ---
@@ -72,23 +74,23 @@ All actions pass through a policy gate before execution.
 
 A system is considered MCC-compliant if it satisfies the following:
 
-1. **Execution MUST be deny-by-default**
+1. **Execution MUST be deny-by-default**  
    - No action is executed without explicit `ALLOW`
 
-2. **All intents MUST pass through a control evaluation**
+2. **All intents MUST pass through a control evaluation**  
    - Direct execution without MCC is non-compliant
 
-3. **The system MUST implement fail-closed behavior**
+3. **The system MUST implement fail-closed behavior**  
    - Any uncertainty, violation, or error → `DENY`
 
-4. **Execution MUST be strictly gated by decision outcome**
+4. **Execution MUST be strictly gated by decision outcome**  
    - `ALLOW` → execution permitted  
    - `DENY` → execution blocked  
 
-5. **All decisions MUST be recorded in an audit log**
+5. **All decisions MUST be recorded in an audit log**  
    - Each entry MUST be linked via a hash-chain
 
-6. **Audit logs MUST be tamper-evident**
+6. **Audit logs MUST be tamper-evident**  
    - Integrity MUST be cryptographically verifiable
 
 Non-compliant systems MUST NOT be considered safe for autonomous execution.
@@ -221,6 +223,19 @@ This implementation establishes public prior art for:
 - policy-gated execution  
 - fail-closed AI safety mechanisms  
 - tamper-evident decision auditability  
+
+---
+
+## Non-Goals
+
+MCC does **NOT** define:
+
+- How intents are generated (LLM, rules, or other systems)  
+- The internal structure of policy logic  
+- The execution layer implementation  
+- Domain-specific safety rules  
+
+MCC strictly defines the **control boundary** between intent and execution.
 
 ---
 
