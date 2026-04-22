@@ -1,0 +1,14 @@
+version: v1.5
+prior_art_date: 2026-04-22
+
+rules:
+    - action: read_file
+    condition: true
+    
+    - action: write_file
+    condition: false
+    
+    - action: execute
+    condition: false
+
+default: DENY
