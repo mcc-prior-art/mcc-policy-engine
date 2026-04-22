@@ -96,8 +96,6 @@ execute({"action": "delete_user"})
 EXECUTED: user deleted
 ```
 
----
-
 ### With MCC
 
 ```python
@@ -114,8 +112,6 @@ Decision: DENY
 Result: BLOCKED
 ```
 
----
-
 ### Conclusion
 
 Without MCC → execution occurs  
@@ -124,7 +120,13 @@ With MCC → execution is controlled
 MCC is not advisory.  
 It is an enforcement boundary.  
 It is a required control layer for systems that act.  
-**This behavior is deterministic and enforceable by design.**
+This behavior is deterministic and enforceable by design.
+
+Run the full proof:
+
+```bash
+python examples/mcc_runtime_proof.py
+```
 
 ---
 
