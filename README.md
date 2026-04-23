@@ -20,6 +20,8 @@ MCC introduces a boundary between:
 - intent generation (LLMs, agents)
 - execution authority (systems, APIs, workflows)
 
+Without that boundary, execution becomes implicit.
+
 The model never executes directly.
 
 ---
@@ -29,7 +31,7 @@ The model never executes directly.
 AI Model → Intent → MCC → Decision → Execution (or Denial)
 
 - model proposes  
-- MCC evaluates (policy, context, confidence)  
+- MCC evaluates (policy, context, thresholds)  
 - only approved actions execute  
 
 ---
@@ -42,7 +44,7 @@ MCC produces one of three outcomes:
 - ESCALATE — requires human approval  
 - DENY — blocked  
 
-Default: deny-by-default (fail-closed).
+Default: deny-by-default (fail-closed)
 
 If something is unclear, invalid, or unsafe — it does not execute.
 
@@ -50,19 +52,21 @@ If something is unclear, invalid, or unsafe — it does not execute.
 
 ## Meta-Cognitive Layer
 
-MCC internally:
-- tracks session history  
-- evaluates context consistency  
-- estimates confidence per intent  
+MCC enforces control through:
+
+- threshold-based decision logic  
+- intent validation  
+- idempotent execution control  
+- optional state/context awareness (extensible)
 
 If:
-- confidence falls below threshold  
-- or action exceeds defined limits  
-- or context is anomalous  
+- action exceeds safe thresholds  
+- or falls into uncertainty zone  
 
-→ decision becomes ESCALATE
+→ decision becomes ESCALATE  
+→ execution is paused until a higher authority decides  
 
-This is the meta-cognitive layer:
+This is the meta-cognitive layer:  
 not just what to do — but whether it should be done at all.
 
 ---
@@ -75,8 +79,7 @@ LLM output:
 
 {
   "intent": "send_payment",
-  "amount": 50000,
-  "recipient": "external_vendor"
+  "amount": 50000
 }
 
 System behavior:
@@ -84,7 +87,6 @@ System behavior:
 → API call executed  
 → money transferred  
 
-No explicit decision layer.  
 Execution is implicit.
 
 ---
@@ -95,8 +97,7 @@ Same input:
 
 {
   "intent": "send_payment",
-  "amount": 50000,
-  "recipient": "external_vendor"
+  "amount": 50000
 }
 
 MCC decision:
@@ -141,23 +142,21 @@ With MCC:
 
 - deterministic allow/deny/escalate decisions  
 - fail-closed behavior on errors  
-- server-side confidence estimation  
-- contextual checks via session history  
-- idempotent evaluation (Redis + fallback)  
+- idempotent evaluation (safe retries)  
 - HMAC-signed responses  
-- hot-reloading YAML policies  
-- distributed rate limiting  
-- append-only audit log (hash chain)  
+- basic threshold-based control logic  
+- extensible policy layer  
 - Prometheus metrics  
 
 ---
 
 ## Quick Start
 
-export MCC_API_KEYS='{"demo-key":{"tenant":"demo","scopes":["payments:write"]}}'  
+export MCC_API_KEYS='{"demo-key":{"tenant":"demo"}}'  
 export MCC_HMAC_SECRET="change-me-in-production"  
+
 pip install -r requirements.txt  
-uvicorn mcc_policy_engine:app --port 8000  
+uvicorn main:app --port 8000  
 
 ---
 
@@ -185,8 +184,8 @@ curl -X POST http://localhost:8000/evaluate \
 ## Where MCC Fits
 
 - AI agents with tool execution  
-- financial and transactional systems  
-- API-driven automation  
+- financial systems  
+- API automation  
 - robotics / real-world control  
 - enterprise AI governance  
 
@@ -209,7 +208,6 @@ mcc.prior.art.2026@proton.me
 MCC is not another model.  
 MCC is not another interface.
 
-It is the missing layer between intelligence and action.
+Once systems can act, control is no longer optional.
 
-Systems that act must be controlled.  
 MCC defines that control.
