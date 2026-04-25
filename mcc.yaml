@@ -1,8 +1,30 @@
-version: 1.0
+version: "1.0"
+
+mcc:
+  name: mcc-layer
+  mode: fail-closed
+
 actions:
-  payments:
-    ALLOW: amount < 100
-    ESCALATE: amount < 10000
-    DENY: amount >= 10000
-audit: true
-rollback: true
+  send_payment:
+    description: "Control policy for payment execution"
+    rules:
+      allow:
+        condition: "amount < 100"
+        reason: "Low-value payment"
+      escalate:
+        condition: "amount >= 100 and amount < 10000"
+        reason: "Human approval required"
+      deny:
+        condition: "amount >= 10000"
+        reason: "High-risk payment blocked"
+
+audit:
+  enabled: true
+  hash_chain: true
+
+rollback:
+  enabled: true
+
+default:
+  decision: DENY
+  reason: "No explicit execution authority"
