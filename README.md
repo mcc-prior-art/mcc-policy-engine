@@ -8,8 +8,10 @@
 **Author:** Alexandr Ponomariov / AXLOGIQ Inc.  
 **Repository:** https://github.com/mcc-prior-art/mcc-layer  
 **Version:** `v1.12.0`  
-**Current capability baseline:** through [PR #106 — Phase 2: Proposal -> Signed Authority -> Governed Execution](https://github.com/mcc-prior-art/mcc-layer/pull/106)  
-**Baseline commit:** [`f01f0d6`](https://github.com/mcc-prior-art/mcc-layer/commit/f01f0d67733382630066d10d61db6c6f60580e7f)  
+**Current capability baseline:** through [PR #108 — Phase 2 Live Sandbox Proof](https://github.com/mcc-prior-art/mcc-layer/pull/108)  
+**Live external proof:** [GitHub Actions run #1](https://github.com/mcc-prior-art/mcc-layer/actions/runs/34281506042) — SUCCESS on `main` @ `25c9f857`  
+**Live external target:** [`mcc-prior-art/mcc-phase2-sandbox` Issue #1](https://github.com/mcc-prior-art/mcc-phase2-sandbox/issues/1)  
+**Baseline commit:** [`c75372c`](https://github.com/mcc-prior-art/mcc-layer/commit/c75372c694d7e1482fe26e2e46904e1ddb987113)  
 **Baseline date:** `2026-09-08`  
 **Doctrine record:** `2026-06-02`
 
@@ -28,6 +30,76 @@ make verify-assurance
 [Reproducing Assurance](docs/REPRODUCING_ASSURANCE.md) · [Assurance Index](docs/ASSURANCE_INDEX.md)
 
 **Boundary:** self-administered reproducible assurance, not a third-party audit.
+
+## Phase 2 Live External Sandbox Proof
+
+On 2026-09-08 UTC, the manually-dispatched Phase 2 live sandbox workflow completed
+successfully on `main` at commit
+[`25c9f857`](https://github.com/mcc-prior-art/mcc-layer/commit/25c9f857b1c1478cebc9a1de5f73bbc559696244).
+
+For the first repository-recorded Phase 2 live external proof, MCC-Core executed a real,
+harmless GitHub side effect in the isolated repository
+[`mcc-prior-art/mcc-phase2-sandbox`](https://github.com/mcc-prior-art/mcc-phase2-sandbox)
+through the existing, unmodified `ProposalExecutionService.authorize_and_execute` path —
+never a mock server, never a direct/alternate call.
+
+The successful run created exactly the intended sandbox issue:
+
+**[MCC Phase 2 Live Sandbox Proof — Issue #1](https://github.com/mcc-prior-art/mcc-phase2-sandbox/issues/1)**
+
+```
+proposal
+  -> tenant-scoped ownership
+  -> authority decision
+  -> signed execution authority
+  -> durable admission
+  -> audit-before-actuation
+  -> resource-bound actuator
+  -> real external GitHub side effect
+  -> durable execution state
+```
+
+References:
+[PR #108](https://github.com/mcc-prior-art/mcc-layer/pull/108) ·
+[workflow run #1](https://github.com/mcc-prior-art/mcc-layer/actions/runs/34281506042) ·
+[sandbox Issue #1](https://github.com/mcc-prior-art/mcc-phase2-sandbox/issues/1) ·
+[docs/PHASE2_LIVE_SANDBOX_PROOF.md](docs/PHASE2_LIVE_SANDBOX_PROOF.md)
+
+This closes the previously documented empirical gap that the live external GitHub
+sandbox execution had not yet been performed.
+
+### Why this matters
+
+Before this run, MCC-Core had extensive deterministic, adversarial, Redis-backed,
+replay/idempotency, binding, durability, reconciliation, and assurance evidence, but
+the Phase 2 external GitHub sandbox path had not yet been executed against a real
+external service. This successful run closes that empirical gap. It demonstrates
+that the governed Phase 2 execution path can cross the system boundary and produce a
+real external side effect while retaining the existing execution-authority controls.
+
+The observed live sequence was:
+
+```
+PROPOSED
+  -> authorized governed execution
+  -> real external GitHub side effect
+  -> EXECUTED
+  -> identical replay BLOCKED
+  -> already-executed reconciliation NOT_RECONCILABLE
+```
+
+Therefore this milestone moves the evidence from a controlled/simulated external
+actuation proof to a controlled LIVE external actuation proof. This is the first
+repository-recorded Phase 2 proof that MCC-Core's governed execution-authority path
+reached a real external service and produced a real side effect through the existing
+`ProposalExecutionService` path.
+
+This does not establish production readiness, production-scale reliability,
+third-party validation, or certification.
+
+**Boundary:** This is a successful controlled live external execution proof, not a
+production deployment, third-party security audit, formal certification, or proof of
+production-scale reliability.
 
 ---
 
@@ -192,7 +264,7 @@ Its reference runtime was implemented with an AI coding agent, tested against do
 
 **Historical evidence:** [PR #4 — Runtime Upgrade Merge](https://github.com/mcc-prior-art/mcc-layer/pull/4)
 
-Runtime upgrade record: PR #4 merged as commit `32d4d3a`, extending the reference runtime with a bounded 10,000-entry cache invariant under public CI verification. This is an early historical milestone; the repository's current capability baseline is tracked in the metadata block above and reflects PR #106.
+Runtime upgrade record: PR #4 merged as commit `32d4d3a`, extending the reference runtime with a bounded 10,000-entry cache invariant under public CI verification. This is an early historical milestone; the repository's current capability baseline is tracked in the metadata block above and reflects PR #108.
 
 ---
 
